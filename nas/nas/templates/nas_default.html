@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang='ru'>
+
+{% load static %}
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}{% endblock title %}</title>
+  <link rel="stylesheet" href="{% static 'css/custom_styles.css' %}">
+  <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+  <link rel="icon" href="{% static 'img/icon.ico' %}"\>
+  <script type="application/javascript" src="{% static 'js/jquery-3.6.0.js' %}"></script>
+  <script type="application/javascript" src="{% static 'js/bootstrap.min.js' %}"></script>
+  <script type="application/javascript" src="{% static 'js/custom_scripts.js' %}"></script>
+  {% block custom_imports %}{% endblock custom_imports %}
+</head>
+
+<body>
+  <!-- шапка -->
+  <header class="p-2 bg-dark text-white">
+    <div class="container-fluid">
+      <div class="align-items-center row">
+        <!-- логотип -->
+        <div class="col-1">
+          <img src="{% static 'img/logo.png' %}" alt="logo" class="d-block mx-auto" style="width: 2.5rem;">
+        </div>
+
+        <!-- ссылки -->
+        <div class="col d-flex justify-content-between">
+          <ul class="nav mb-2 mb-md-0">
+            <li class="nav-item {% if request.path == '/' %}active-link{% endif %}"><a href="{% url 'main' %}" class="nav-link px-1 mx-4 text-white">Главная</a></li>            
+            {# если пользователь не аутентифицирован, то не показывать возможности #}
+            {% if user.is_authenticated %}
+              <li class="nav-item {% if '/iptosub/' in request.path %}active-link{% endif %}"><a href="{% url 'network_search' %}" class="nav-link px-1 mx-4 text-white">IP хоста 🠖 Инфо о Подсети</a></li>
+            {% else %}
+            {% endif %}
+          </ul>
+
+          <!-- профиль -->
+          <div class="dropdown">
+            {# иконка профиля #}
+            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownUser" data-bs-toggle="dropdown" aria-expanded="false" onclick="toggleProfileMenu();">
+              <img src="{% static 'img/profile-icon-light.png' %}" alt="profile icon" style="width: 1.5rem; height: 1.5rem;">
+            </button>
+            <ul class="dropdown-menu text-small" id="dropdownMenu" aria-labelledby="dropdownUser">
+              {% if user.is_authenticated %}
+                {# кнопка Обновить БД Логич. #}
+                {% if perms.network_search.change_networksdb %}
+                  <li class="px-2 py-2"><button class="w-100 btn-text"><a href="{% url 'network_search_updatedb_logical' %}" class="m-0 p-0 a-text">Обновление Лог.</a></button></li>
+                {% endif %}
+
+                {# кнопка Обновить БД Физич. #}
+                {% if perms.network_search.change_physicaldb %}
+                  <li class="px-2 py-2"><button class="w-100 btn-text"><a href="{% url 'network_search_updatedb_physical' %}" class="m-0 p-0 a-text">Обновление Физ.</a></button></li>
+                {% endif %}
+
+                {# разделитель #}
+                {% if perms.network_search.change_networksdb or perms.network_search.change_physicaldb %}
+                  <li><hr class="dropdown-divider"></li>
+                {% endif %}
+
+                {# кнопка Выйти #}
+                <li class="px-2"><form action="{% url 'logout' %}" method="post">
+                  {% csrf_token %}
+                  <button type="submit" class="w-100 btn-text"><p class="m-0 p-0 text-dark">Выйти</p></button>
+                </form></li>
+              {% else %}
+                {# кнопка Войти #}
+                <li class="px-2"><button class="w-100 btn-text"><a href="{% url 'login' %}" class="m-0 p-0 a-text">Войти</a></button></li>
+              {% endif %}
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- основной блок -->
+  <main>
+    {% block content %}{% endblock content %}
+  </main>
+</body>
+
+</html>

@@ -1,0 +1,21 @@
+label[for="input_del_text"],
+label[for="input_del_csv"] {
+  font-size: smaller;
+  line-height: normal;
+}
+
+.center_div_block {
+  padding-left: 10px !important;
+}
+
+.output_div {
+  padding-left: 0;
+}
+
+.output_div_block {
+  padding-left: 15px;
+}
+
+.pseudo_center_div_block {
+  padding-left: 0;
+}

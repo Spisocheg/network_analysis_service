@@ -1,0 +1,6 @@
+sysName;interfaceName;interfaceIP
+12345-Router_Main;GigabitEthernet0/1;192.168.1.1/24
+67890-Router_Backup;Ethernet1/0/1;10.0.0.2/24
+54321-Router_Edge;Vlan100;172.16.32.1/22
+98765-Router_Core;eth0;192.168.10.5/28
+45678-Router_Storage;enp3s0;10.10.20.30/27

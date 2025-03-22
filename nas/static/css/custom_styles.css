@@ -1,0 +1,48 @@
+:root {
+  --fns-main-color: #343a40;
+  --fns-second-color: #5a6268;
+}
+/* заменить все используемые secondary цвета на переменную */
+
+label, p, h1 {
+  color: var(--fns-main-color) !important;
+}
+
+.active-link {
+  text-decoration: underline;
+  text-underline-offset: 0.4em;
+}
+
+.btn-text {
+  text-decoration: none;
+  color: var(--fns-main-color);
+  background-color: white;
+  border: none;
+  outline: none;
+
+  &:hover {
+    background-color: white;
+    border: none;
+    border-radius: 0.2rem;
+    outline: 0.1rem solid gray;
+  }
+}
+.btn-text:active, .btn-text:focus {
+  color: var(--fns-main-color);
+  background-color: lightgray;
+  border: none;
+  border-radius: 0.2rem;
+  outline: none;
+}
+
+.a-text {
+  color: var(--fns-main-color);
+  text-decoration: none;
+
+  &:hover,
+  &:visited,
+  &:focus {
+    color: var(--fns-main-color) !important;
+    text-decoration: none;
+  }
+}

@@ -1,0 +1,120 @@
+{% extends "nas_default.html" %}
+{% load user_has_group %}
+
+
+{% block title %}Поиск подсетей по IP-адресу хоста{% endblock title %}
+
+
+{% block custom_imports %}
+  {% load static %}
+  <link rel="stylesheet" href="{% static 'css/network_search_custom_styles.css' %}">
+{% endblock custom_imports %}
+
+
+{% block content %}
+  <div class="container-fluid my-3">
+    <div class="row">
+      <!-- колонки ввода и доп.функций (средняя) -->
+      <div class="col-4">
+        {% if form %}
+          <form method="post">
+            {% csrf_token %}
+            <div class="form-row">
+              <!-- колонка ввода -->
+              <div class="form-group col-10">
+                <label for="input_textarea">{{ form.host_addresses.label }}</label>
+                {{ form.host_addresses }}
+              </div>
+
+              <!-- средняя колонка -->
+              <div class="form-group col-2 center_div_block">
+                <label style="opacity: 0;">_</label>
+                <!-- кнопка Найти -->
+                <div class="form-row mx-auto">
+                  <div class="form-group w-100">
+                    <button type="submit" class="btn btn-secondary w-100" name="find">Найти</button>
+                  </div>
+                </div>
+                {% if user|has_group:'engineer' %}
+                  <!-- поле Разделитель текста -->
+                  <div class="form-row mx-auto">
+                    <div class="form-group">
+                      <label for="input_del_text">{{ form.delimeter_text.label }}</label>
+                      {{ form.delimeter_text }}
+                    </div>
+                  </div>
+                  <!-- поле Разделитель csv -->
+                  <div class="form-row mx-auto">
+                    <div class="form-group">
+                      <label for="input_del_csv">{{ form.delimeter_csv.label }}</label>
+                      {{ form.delimeter_csv }}
+                    </div>
+                  </div>
+                {% endif %}
+              </div>
+            </div>
+          </form>
+        {% else %}
+          <div class="row">
+            <!-- колонка ввода -->
+            <div class="col-10">
+              <label>IP-адреса</label>
+              <textarea class='form-control' rows='20' disabled></textarea>
+            </div>
+
+            <!-- средняя колонка -->
+            <div class="col-2 pseudo_center_div_block">
+              <label style="opacity: 0;">_</label>
+              <!-- кнопка Найти -->
+              <div class="row mx-auto">
+                <div class="mb-3 w-100">
+                  <button type="submit" class="btn btn-secondary w-100" name="find" disabled>Найдено</button>
+                </div>
+              </div>
+              {% if user|has_group:'engineer' %}
+                <!-- поле Разделитель текста -->
+                <div class="row mx-auto">
+                  <div class="mb-3">
+                    <label for="input_del_text">Разделитель (текст)</label>
+                    <input type="text" name="delimeter_text" class="w-100" id="input_del_text" value="{{ request.session.delimeter_text }}" disabled>
+                  </div>
+                </div>
+                <!-- поле Разделитель csv -->
+                <div class="row mx-auto">
+                  <div class="mb-3">
+                    <label for="input_del_csv">Разделитель (csv)</label>
+                    <input type="text" name="delimeter_csv" class="w-100" id="input_del_csv" value="{{ request.session.delimeter_csv }}" disabled>
+                  </div>
+                </div>
+              {% endif %}
+            </div>
+          </div>
+        {% endif %}
+      </div>
+
+      <!-- колонка вывода -->
+      <div class="col-8 output_div">
+        <label>Результат</label>
+        <!-- блок вывода -->
+        <div class="row output_div_block" style="height: {% if output_height %}{{ output_height }}{% else %}91%{% endif %};">
+          <pre id="subnet-list" class="w-100 h-100 border">{% if subnet_list %}{{ subnet_list }}{% else %} {% endif %}</pre>
+        </div>
+        <!-- кнопки -->
+        {% if request.session.download_what %}
+        <div class="row" style="padding-left: 15px; margin-top: 5px;">
+          {% if subnet_list %}
+            <form method="post">
+              {% csrf_token %}
+              <textarea style="display: none;" name="temp_subnet_list">{{ subnet_list }}</textarea>
+              <button type="submit" class="btn btn-secondary" name="download_csv">Скачать .{{ request.session.download_what }}</button>
+            </form>
+          {% else %}
+              
+          {% endif %}
+        </div>
+        {% endif %}
+        
+      </div>
+    </div>
+  </div>  
+{% endblock content %}
