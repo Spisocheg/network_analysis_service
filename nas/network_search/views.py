@@ -70,10 +70,10 @@ class IPHostToSubnetView(LoginRequiredMixin, PermissionRequiredMixin, View):
                                 output.append(info)
                                 break
                         if flag == len(output):
-                            info = [host_address, f"Подсеть не найдена для: {host_address}"] + [''] * 2
+                            info = [host_address.strip(), f"Подсеть не найдена для: {host_address.strip()}"] + [''] * 2
                             output.append(info)
                     except ValueError:
-                        info = [host_address, f"Некорректный адрес: {host_address}"] + [''] * 2
+                        info = [host_address.strip(), f"Некорректный адрес: {host_address.strip()}"] + [''] * 2
                         output.append(info)
                 return output
             
